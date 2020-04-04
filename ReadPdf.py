@@ -3,14 +3,51 @@
 # Import a pdf file from Center for Health Protection (CHP) to extract information from Hong Kong COVID-19 situation report
 
 # Import libraries 
-from tika import parser
+import camelot 
+import pandas as pd
+from pandas import DataFrame
+from datetime import datetime 
+import os 
 
-# # Import Files 
-# Parse data from file 
-raw = parser.from_file('local_situation_covid19_en.pdf')
-print(raw['content'])
+# Read Data 
+tables = camelot.read_pdf('data/pdf/local_situation_covid19_en.pdf', 
+	pages='1-2')
 
-from tabula import read_pdf
+# Append table from different pages 
 
-df = read_pdf("local_situation_covid19_en.pdf", pages='2', multiple_tables='False')
-print(df)
+
+covidTable = []
+for table in tables:
+	covidTable.append(table.df)
+covidTable = pd.concat(covidTable)
+
+covidTable.columns = ['CaseNo', 'ReportDate', 'OnsetDate'
+	, 'Gender', 'Age', 'HospitalName', 'Status', 'Residency'
+	, 'Classification', 'ConfirmCase']
+
+# Remove row with header information 
+covidTable = DataFrame.drop_duplicates(covidTable)
+covidTable = covidTable.iloc[1:,] # remove first header row()
+
+# Remove empty row 
+nan_value = float("NaN")
+covidTable = covidTable.replace("", nan_value, inplace=False)
+covidTable = covidTable.dropna()
+
+# Cast each column into a correct data type 
+covidTable = covidTable.astype({'CaseNo': 'int32'})
+covidTable['ReportDate'] = pd.to_datetime(covidTable['ReportDate'])
+# covidTable['OnsetDate'] = pd.to_datetime(covidTable['OnsetDate'])
+covidTable = covidTable.astype({'Gender': 'category'})
+covidTable = covidTable.astype({'Age': 'int32'})
+covidTable = covidTable.astype({'HospitalName': 'category'})
+covidTable = covidTable.astype({'Status': 'category'})
+covidTable = covidTable.astype({'Residency': 'category'})
+covidTable = covidTable.astype({'Classification': 'category'})
+covidTable = covidTable.astype({'ConfirmCase': 'category'})
+
+# Saving file 
+now = datetime.now()
+fileName = "data/processedData/" + now.strftime("%Y%m%d") + ".pkl"
+covidTable.to_pickle(fileName)
+

@@ -5,7 +5,7 @@
 2. Better visualization of Hong Kong Outbreak 
 
 ## Development Milestone 
-![Development Milestone](/img/DevelopmentMilestone.pdf)
+![Development Milestone](/img/DevelopmentMilestone.png)
 
 ## Import Data from Department of Health and Protection 
 ### Data Source 

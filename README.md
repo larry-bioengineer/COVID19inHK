@@ -9,12 +9,13 @@
 
 ## Import Data from Department of Health and Protection 
 ### Data Source 
-https://www.chp.gov.hk/files/pdf/local_situation_covid19_en.pdf
+Center for Health Protection (https://www.chp.gov.hk/files/pdf/local_situation_covid19_en.pdf)
+To download the data, I am using requests, which will get the file from the center and save it to folder. 
 
 ### Import tabular data 
 I am using camelot (ref: https://camelot-py.readthedocs.io/en/master/). This library scans each page of the document and looks for table-like object. Then, user can use it to generate a pandas dataframe object. 
 
-### Quick sheet using Pandas dataframe 
+### Quick cheat sheet using Pandas dataframe 
 https://www.shanelynn.ie/using-pandas-dataframe-creating-editing-viewing-data-in-python/
 
 ### Import Meta data 

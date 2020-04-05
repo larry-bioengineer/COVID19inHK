@@ -18,4 +18,9 @@ I am using camelot (ref: https://camelot-py.readthedocs.io/en/master/). This lib
 ### Quick cheat sheet using Pandas dataframe 
 https://www.shanelynn.ie/using-pandas-dataframe-creating-editing-viewing-data-in-python/
 
-### Import Meta data 
+### Displaying analytics on a web app 
+I am using flask (ref: https://flask.palletsprojects.com/en/1.1.x/). Flask is python library for developing minimal application 
+
+### Deploying the website 
+I am using Heroku (ref: https://dashboard.heroku.com/apps) Heroku allows users to deploy their flask app on their server for free. 
+

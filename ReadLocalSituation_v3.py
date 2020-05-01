@@ -15,7 +15,7 @@ import pickle
 
 # Read Data 
 tables = camelot.read_pdf('data/pdf/local_situation_covid19_en.pdf', 
-	pages='1-5')
+	pages='1-end')
 
 # camelot.plot(tables[0], kind='grid')
 # plt.show()
@@ -41,51 +41,38 @@ covidTable.columns = ['CaseNo', 'ReportDate', 'OnsetDate'
 covidTable = DataFrame.drop_duplicates(covidTable)
 covidTable = covidTable.iloc[1:,] # remove first header row()
 
-# Remove empty row 
-covidTable = covidTable.dropna(axis=0, how='any', thresh=9, subset=None, inplace=False)
+# Remove any row with nan
+nan_value = float("NaN")
+covidTable = covidTable.replace("", nan_value, inplace=False)
+covidTable = covidTable.dropna(axis=0, how='any', thresh=10, subset=None, inplace=False)
 
 # Cast each column into a correct data type 
-covidTable = covidTable.astype({'CaseNo': 'int32'})
-covidTable['ReportDate'] = pd.to_datetime(covidTable['ReportDate'])
+# covidTable = covidTable.astype({'CaseNo': 'float'})
+# covidTable['ReportDate'] = pd.to_datetime(covidTable['ReportDate'])
 # covidTable['OnsetDate'] = pd.to_datetime(covidTable['OnsetDate'])
-covidTable = covidTable.astype({'Gender': 'category'})
-covidTable = covidTable.astype({'Age': 'float'})
+# covidTable = covidTable.astype({'Gender': 'category'})
+# covidTable = covidTable.astype({'Age': 'float'})
 
 # Sort Data by case number 
 covidTable = covidTable.sort_values(by=['CaseNo'])
 
-# print(covidTable.info())
+
 
 # Saving file 
 path = "data/processedData/"
 filename = "mainDataSet.pkl"
 
+try:
+	oldTable = pickle.load(open(path + filename, "rb"))
 
-oldTable = pickle.load(open(path + filename, "rb"))
+	# Append data
+	covidTable = oldTable.append(covidTable)
+	covidTable = DataFrame.drop_duplicates(covidTable)
+	covidTable = covidTable.dropna(axis=0, how='any', thresh=10, subset=None, inplace=False)
+	covidTable = covidTable.sort_values(by=['CaseNo'])
+	covidTable.to_pickle(path + filename)
+	
+except:
+	covidTable.to_pickle(path + filename)
 
-# Append data
-covidTable = oldTable.append(covidTable)
-covidTable = covidTable.sort_values(by=['CaseNo'])
-print(covidTable.head())
-
-# filling in missing data 
-
-
-covidTable.to_pickle(path + filename)
-
-
-# try: 
-# 	oldTable = pickle.load(open(path + filename, "wb+"))
-
-# 	# Append data
-# 	covidTable = oldTable.append(covidTable)
-# 	print(covidTable.head())
-# 	# filling in missing data 
-
-# 	covidTable.to_pickle(path + filename)
-# except:
-# 	covidTable.to_pickle(path + filename)
-# 	print("haha")
-
-
-
+print(covidTable.info())

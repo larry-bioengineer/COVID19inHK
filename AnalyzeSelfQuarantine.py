@@ -23,8 +23,6 @@ data = data.replace('\n','', regex=True)
 from geopy.geocoders import GoogleV3
 
 # geolocator = Nominatim(user_agent="myGeocoder", format_string="%s, Hong Kong", timeout=3)
-key = 'AIzaSyDZXhy3wabwyf5q2LqE9V75wHroWi9mQt8'
-geolocator = GoogleV3(api_key=key, timeout=3)
 
 # Process Dataset Address and remove excessive content 
 
